@@ -1,13 +1,23 @@
+/* T'es pas mal geek si t'es rendue a regarder ici :) */
+
 body {
   font-family: 'Special Elite', cursive;
   font-size: large;
 }
 
-.container {
-  margin-top: 8em;
-  margin-left: 4em;
-}
-
-p { 
+p + p { 
+  margin-top: 1em;
   text-indent: 1.5em;
 }
+
+.container {
+  margin-top: 4em;
+  margin-left: 2em;
+}
+
+.signature {
+  margin-top: 1.5em;
+}
+
+
+  
