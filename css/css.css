@@ -19,5 +19,16 @@ p + p {
   margin-top: 1.5em;
 }
 
+.PS {
+  color: gray;
+  font-style: italic;
+  font-size: small;
+  margin-top: 1em;
+}
+
+.xxx {
+  color: red;
+  font-size: small;
+}
 
   
