@@ -7,7 +7,7 @@
  * Used globally to determine if functionality should be
  * degraded for older browsers. Currently applies to IE7 and older.
  */
-var degraded = false;
+var degraded = true;
 
 if (typeof String.prototype.trim !== 'function') {
   /**
