@@ -294,7 +294,7 @@ Dot.prototype.draw = function() {
       if (!this.d) {
           this.d = document.createElement('img');
           this.d.className = 'ball';
-          this.d.src = '/ball-' + this.fillStyle + '.png';
+          this.d.src = '/countdown/ball-' + this.fillStyle + '.png';
           this.ctx.appendChild(this.d);
       }
       this.d.style.left = this.x + 'px';
