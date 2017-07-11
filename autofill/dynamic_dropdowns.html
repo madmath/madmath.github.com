@@ -1,0 +1,42 @@
+<html>
+<head>
+<script>
+function changeStates() {
+  var countryElement = document.getElementById('country');
+  var statesElement = document.getElementById("states");
+  statesElement.innerHTML = '';
+  var states = [];
+  if (countryElement.value == "US") {
+    states = ['CA', 'MA', 'NY', 'MD', 'OR', 'OH', 'IL', 'DC'];
+  } else if (countryElement.value == "Canada") {
+    states = ['AB', 'BC', 'SK', 'QC', 'ON', 'NB', 'NS', 'NF'];
+  }
+  for (var i in states) {
+    var option = document.createElement("option");
+    option.text = states[i];
+    statesElement.add(option);
+  }
+}
+</script>
+</head>
+<body>
+  <h3>Profile Autofill With Changing State Dropdown</h3>
+
+<form name="addr1.1" id="form1" action="https://example.com/" method="post">
+  Name: <input type="text" name="name"><br>
+  Address: <input type="text" name="address"><br>
+  City: <input type="text" name="city"><br>
+  State: <select id="states" name="state"></select> <br>
+  Zip: <input name="zip" id="form_zip"> <br>
+  Country:
+  <select id="country" name="country" onchange="changeStates();">
+    <option value="Canada">Canada</option>
+    <option value="US">United States</option>
+  </select><br>
+  Email: <input name="email" id="form_email"> <br>
+  <input type="reset" value="Reset">
+  <input type="submit" value="Submit">
+</form>
+<script>changeStates();</script>
+</body>
+</html>
