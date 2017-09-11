@@ -34,8 +34,8 @@
     <div id="container">
       <div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark" style="float: right"></div>
       <h2>Unresolved Google Drive comments</h2>
-      <p>Comments that are unresolved and have been started by you, or mention you somewhere in the comment thread.</p>
-      <p>Entirely client-side, no external JS except for Google APIs</p>
+      <p>Comments that are unresolved and have been started by you, or mention you somewhere in the comment thread.<br>
+      Entirely client-side, no external JS except for Google APIs (which are end-user rate-limited so results can take a while to load).</p>
       <ul id="comments" class="mdl-list demo-list-three"></ul>
     </div>
     <script>
@@ -83,10 +83,10 @@
         gapi.client.load('drive', 'v3', onClientReady);
 
         function getAllRelevantCommentsForFile(fileId, name, webViewLink, numRetries) {
-          if (numRetries > 2)
+          if (numRetries > 3)
             return;
 
-          var commentPromise = gapi.client.drive.comments.list({
+          gapi.client.drive.comments.list({
             'fileId': fileId,
             'fields': 'nextPageToken, comments(id, author, htmlContent, resolved, replies)'
           }).then(function(resp) {
@@ -123,8 +123,12 @@
               }
             }
           }, function(reason) {
-            // Try again in 1-2 seconds.
-            setTimeout(function() { getAllRelevantCommentsForFile(fileId, name, webViewLink, ++numRetries) },  Math.floor((Math.random() * 1000) + 1000));
+            if (reason.body.indexOf("User Rate Limit") !== -1) {
+              console.log('Rate limited, trying again');
+              // Try again in [1, numRetries+1] seconds.
+              setTimeout(function() { getAllRelevantCommentsForFile(fileId, name, webViewLink, ++numRetries) },  Math.floor((Math.random() * 1000)*numRetries + 1000));
+            }
+
           });
         }
 
@@ -142,7 +146,12 @@
             if (files && files.length > 0) {
               for (var i = 0; i < files.length; i++) {
                 var file = files[i];
-                getAllRelevantCommentsForFile(file.id, file.name, file.webViewLink, 0);
+                // Start in the next second or two, to avoid rate limiting.
+                (function (fileId, name, webViewLink) {
+                    setTimeout(function () {
+                        getAllRelevantCommentsForFile(fileId, name, webViewLink);
+                    }, Math.floor((Math.random() * 1000) + 1000));
+                }(file.id, file.name, file.webViewLink));
               }
             } else {
               document.getElementById('content').appendChild(document.createTextNode('No files found.'));
