@@ -1,0 +1,158 @@
+
+<html lang="en">
+  <head>
+    <title>TODOs and Action Items</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Google API stuff -->
+    <meta name="google-signin-scope" content="profile email https://www.googleapis.com/auth/drive">
+    <meta name="google-signin-client_id" content="785017557242-095d1jed4bn2dd25riphdgj9v21ib17g.apps.googleusercontent.com">
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <script src="https://apis.google.com/js/client.js"></script>
+
+    <!-- Material Design Lite -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
+    <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+    <style>
+      #container {
+        margin: 20px;
+      }
+      .demo-list-three {
+        width: 800px;
+      }
+      .user {
+        display: inline-block;
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+
+        object-fit: cover;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="container">
+      <div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark" style="float: right"></div>
+      <h2>TODOs and Action Items</h2>
+      <p>A list of active TODOs or Action Items that are assigned to you, or that you assigned to someone.</p>
+      <ul id="comments" class="mdl-list demo-list-three"></ul>
+    </div>
+    <script>
+      function appendCommentToSection(name, webViewLink, htmlComment, author, replies) {
+        var commentList = document.getElementById('comments');
+        var listItem = document.createElement('li');
+        listItem.setAttribute('class', 'mdl-list__item mdl-list__item--three-line');
+
+        var contentSpan = document.createElement('span');
+        contentSpan.setAttribute('class', 'mdl-list__item-primary-content');
+
+        var icon = document.createElement('img');
+        icon.setAttribute('class', 'mdl-list__item-avatar user');
+        icon.setAttribute('src', author.photoLink);
+        contentSpan.appendChild(icon);
+
+        var nameSpan = document.createElement('span');
+        nameSpan.appendChild(document.createTextNode(author.displayName + ' in "' + name + '"'));
+        contentSpan.appendChild(nameSpan);
+
+        var bodySpan = document.createElement('span');
+        bodySpan.setAttribute('class', 'mdl-list__item-text-body');
+        bodySpan.innerHTML = htmlComment;
+        bodySpan.appendChild(document.createTextNode(' (+' +replies.length + ' replies)'));
+        contentSpan.appendChild(bodySpan);
+
+        listItem.appendChild(contentSpan);
+
+        var secondarySpan = document.createElement('span');
+        secondarySpan.setAttribute('class', 'mdl-list__item-secondary-content');
+
+        var linkIcon = document.createElement('a');
+        linkIcon.setAttribute('class', 'mdl-list__item-secondary-action');
+        linkIcon.setAttribute('href', webViewLink);
+        linkIcon.setAttribute('target', '_blank');
+        linkIcon.innerHTML = "<i class='material-icons'>launch</i>";
+        secondarySpan.appendChild(linkIcon);
+
+        listItem.appendChild(secondarySpan);
+
+        commentList.appendChild(listItem);
+      }
+
+      function onSignIn(googleUser) {
+        gapi.client.load('drive', 'v3', onClientReady);
+
+        function getAllRelevantCommentsForFile(fileId, name, webViewLink, numRetries) {
+          if (numRetries > 3)
+            return;
+
+          gapi.client.drive.comments.list({
+            'fileId': fileId,
+            'fields': 'nextPageToken, comments(id, author, htmlContent, resolved, replies, quotedFileContent, anchor)'
+          }).then(function(resp) {
+            if (resp.error)
+              return;
+
+            var fileComments = resp.result.comments;
+            for (var j = 0; j < fileComments.length; j++) {
+              var comment = fileComments[j];
+              // Unresolved comments either started by me or that mention
+              // me.
+              if (comment.resolved)
+                continue;
+
+              // If the comment is by the user or mentions the user, it's
+              // interesting!
+              var userEmail = googleUser.getBasicProfile().getEmail();
+              var userName = userEmail.split("@")[0];
+              if (comment.htmlContent.indexOf("TODO(") === 0 || comment.htmlContent.indexOf("AI(") === 0) {
+                // It's a TODO or AI
+                if (comment.htmlContent.indexOf("TODO(" + userName) === 0 || comment.htmlContent.indexOf("AI(" + userName) === 0) {
+                    // My TODOs or AIs
+                    appendCommentToSection(name, webViewLink, comment.htmlContent, comment.author, comment.replies);
+                } else if (comment.author.me) {
+                    // TODOs or AIs I assigned to others. 
+                    appendCommentToSection(name, webViewLink, comment.htmlContent, comment.author, comment.replies);
+                }
+              }
+            }
+          }, function(reason) {
+            if (reason.body.indexOf("User Rate Limit") !== -1) {
+              console.log('Rate limited, trying again');
+              // Try again in [1, numRetries+1] seconds.
+              setTimeout(function() { getAllRelevantCommentsForFile(fileId, name, webViewLink, ++numRetries) },  Math.floor((Math.random() * 1000)*numRetries + 1000));
+            }
+
+          });
+        }
+
+        function onClientReady() {
+          // TODO: Should fetch more than 200 documents.
+          gapi.client.drive.files.list({
+            'pageSize': 200,
+            'orderBy': 'viewedByMeTime desc',
+            'fields': "nextPageToken, files(id, name, webViewLink)",
+          }).then(function(response) {
+            if (response.error)
+              return;
+
+            var files = response.result.files;
+            if (files && files.length > 0) {
+              for (var i = 0; i < files.length; i++) {
+                var file = files[i];
+                // Start in the next second or two, to avoid rate limiting.
+                (function (fileId, name, webViewLink) {
+                    setTimeout(function () {
+                        getAllRelevantCommentsForFile(fileId, name, webViewLink);
+                    }, Math.floor((Math.random() * 1000) + 1000));
+                }(file.id, file.name, file.webViewLink));
+              }
+            } else {
+              document.getElementById('content').appendChild(document.createTextNode('No files found.'));
+            }
+          });
+        }
+      }
+    </script>
+  </body>
+</html>
