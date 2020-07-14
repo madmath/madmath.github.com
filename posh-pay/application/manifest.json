@@ -1,0 +1,23 @@
+{
+    "name": "Pay with Posh Pay",
+    "short_name": "PoshPay",
+    "icons": [{
+        "src": "icon.png",
+        "sizes": "128x128",
+        "type": "image/png"
+    }],
+    // "serviceworker": {
+    //   "src": "sw-bobpay.js",
+    //   "use_cache": false
+    // },
+    "prefer_related_applications": true,
+    "related_applications": [{
+        "platform": "play",
+        "id": "com.shopify.arrive.debug",
+        "min_version": "1",
+        "fingerprints": [{
+            "type": "sha256_cert",
+            "value": "28:48:CA:19:0A:5C:7F:76:05:BD:3E:62:84:B2:04:DB:4B:AB:F4:AA:95:98:07:A3:28:B1:66:19:0A:15:78:61"
+        }]
+    }]
+  }
