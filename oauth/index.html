@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#4CAF50">
+  <title>OAuth Callback URL</title>
+  <style>
+    h1, strong {
+      color: #4CAF50;
+    }
+    button {
+      background-color: #4CAF50;
+    }
+  </style>
+</head>
+<body>
+  <div id="contents">
+    <h1>OAuth callback website</h1>
+    <p>Let's test your OAuth redirect.</p>
+
+  </div>
+  <pre id="msg"></pre>
+  <script type="text/javascript">
+    window.addEventListener('DOMContentLoaded', (event) => {
+        document.getElementById('msg').appendChild(document.createTextNode(window.location));
+    });
+
+  </script>
+</body>
+</html>
