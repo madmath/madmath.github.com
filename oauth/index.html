@@ -2,9 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
+  <meta name="referrer" content="never">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#4CAF50">
-  <title>OAuth Callback URL</title>
+  <title>Cookie test</title>
   <style>
     h1, strong {
       color: #4CAF50;
@@ -15,17 +16,16 @@
   </style>
 </head>
 <body>
-  <div id="contents">
-    <h1>OAuth callback website</h1>
-    <p>Let's test your OAuth redirect.</p>
-
-  </div>
-  <pre id="msg"></pre>
-  <script type="text/javascript">
+  <a href="https://app.tornadored.com/cookies/setandredirect">Click here to redirect through app.tornadored.com to another domain.</a>
+  <!-- <script type="text/javascript">
+    var authorizationCode;
     window.addEventListener('DOMContentLoaded', (event) => {
-        document.getElementById('msg').appendChild(document.createTextNode(window.location));
+        var locPre = document.getElementById('loc');
+        locPre.appendChild(document.createTextNode("URL: " + window.location + "\n"));
+        var urlParams = new URLSearchParams(window.location.search);
+        authorizationCode = urlParams.get('code');
+        locPre.appendChild(document.createTextNode("Your Authorization Code: " + authorizationCode));
     });
-
-  </script>
+  </script> -->
 </body>
 </html>

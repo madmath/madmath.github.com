@@ -1,2 +1,10 @@
 <h1>What's up?</h1>
-<a href="https://beremote.myshopify.com/">beremote.myshopify.com</a>
+<a href="/oauth">go to oauth page</a>
+<pre id="loc" style="white-space: pre-wrap;"></pre>
+<script type="text/javascript">
+  var authorizationCode;
+  window.addEventListener('DOMContentLoaded', (event) => {
+      var locPre = document.getElementById('loc');
+      locPre.appendChild(document.createTextNode("referrer: " + document.referrer + "\n"));
+  });
+</script>
