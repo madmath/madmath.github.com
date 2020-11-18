@@ -2,33 +2,47 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="referrer" content="never">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#4CAF50">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+
   <title>Cookie test</title>
   <style>
-    h1, strong {
-      color: #4CAF50;
-    }
-    button {
-      background-color: #4CAF50;
-    }
-  </style>
+  body {
+    padding-top: 5rem;
+  }
+  .starter-template {
+    padding: 3rem 1.5rem;
+  }</style>
 </head>
 <body>
-  <h2>Flows</h2>
+  <main role="main" class="container">
 
-  <h3>Login from an iframe</h3>
-  <p><b>Scenario:</b> You are on a given (e.g. <code>posh.app</code>) for a user who completed authentication previously.
-  <ol>
-    <li>We start on the current domain and somehow prove our identity with <code>posh.app</code></li>
-    <li></li>
-  </ol>, which will set a server-side cookie and redirect to a third domain (here a store). This is a transparent operation to the user and note how quick it is.</p>
-  <iframe src="https://app.tornadored.com/cookies/iframe" ></iframe>
-  <br/>
-  <a href="https://app.tornadored.com/cookies/checkandredirect">Click here for "check and redirect".</a>
-  <p><b>Explanation:</b> "Check and redirect" will first navigate to second domain that we control, which will <b>check</b> for the existence of a server-side cookie and redirect to a third domain (here a different store) <b>with the cookie value</b> (essentially transferring "state" from the second domain to the third).</p>
+    <div class="starter-template">
+      <h2>Test Flows</h2>
 
+    <h3>Step 1: Login from an iframe and redirect</h3>
+    <ol>
+      <li>You are on a given domain for Site A (here <code>madmath.github.io</code>)</li>
+      <li>You encounter a login iframe for <code>posh.app</code>. You prove your identity to <code>posh.app</code> in a secure way.</li>
+      <li>You bounce through <code>posh.app</code> in a top-level manner <b>very quickly</b>, which allows it to set a server cookie.</li>
+      <li>It passes on that value to the redirected domain as a parameter (check the URL bar).</li>
+      <li>Click "back" to do Step 2 below 😉</li>
+    </ol>
+    <iframe src="https://app.tornadored.com/cookies/iframe" ></iframe>
+    <br/>
+    <h3>Step 2: Check login state and redirect</h3>
+    <ol>
+      <li>You are on a given domain for Site A (here <code>madmath.github.io</code>)</li>
+      <li>You encounter a checkout button for <code>posh.app</code>.</li>
+      <li>It <b>briefly</b> redirects you to <code>posh.app</code>, checks your cookie and passes it on to a new store.</li>
+      <li>You are now logged in "across stores" via <code>posh.app</code>.</li>
+    </ol>
+    <a class="btn btn-primary btn-lg" href="https://app.tornadored.com/cookies/checkandredirect" role="button">Checkout with posh.app »</a>
+  </main><!-- /.container -->
+  <footer class="container">
+    <p>Note: I don't own the <code>posh.app</code> domain so I substitute it with another domain I own.</p>
+  </footer>
 </body>
 <script type="text/javascript">
   window.addEventListener("message", (event) => {
