@@ -16,26 +16,26 @@
   </style>
 </head>
 <body>
-
-
-
   <h2>Flows</h2>
-  <a href="https://app.tornadored.com/cookies/setandredirect">Click here for "set and redirect".</a>
-  <p><b>Explanation:</b> "Set and redirect" will first navigate to second domain that we control, which will set a server-side cookie and redirect to a third domain (here a store). This is a transparent operation to the user and note how quick it is.</p>
+
+  <h3>Login from an iframe</h3>
+  <p><b>Scenario:</b> You are on a given (e.g. <code>posh.app</code>) for a user who completed authentication previously.
+  <ol>
+    <li>We start on the current domain and somehow prove our identity with <code>posh.app</code></li>
+    <li></li>
+  </ol>, which will set a server-side cookie and redirect to a third domain (here a store). This is a transparent operation to the user and note how quick it is.</p>
+  <iframe src="https://app.tornadored.com/cookies/iframe" ></iframe>
   <br/>
   <a href="https://app.tornadored.com/cookies/checkandredirect">Click here for "check and redirect".</a>
   <p><b>Explanation:</b> "Check and redirect" will first navigate to second domain that we control, which will <b>check</b> for the existence of a server-side cookie and redirect to a third domain (here a different store) <b>with the cookie value</b> (essentially transferring "state" from the second domain to the third).</p>
 
-
-  <!-- <script type="text/javascript">
-    var authorizationCode;
-    window.addEventListener('DOMContentLoaded', (event) => {
-        var locPre = document.getElementById('loc');
-        locPre.appendChild(document.createTextNode("URL: " + window.location + "\n"));
-        var urlParams = new URLSearchParams(window.location.search);
-        authorizationCode = urlParams.get('code');
-        locPre.appendChild(document.createTextNode("Your Authorization Code: " + authorizationCode));
-    });
-  </script> -->
 </body>
+<script type="text/javascript">
+  window.addEventListener("message", (event) => {
+    if (event.origin !== "https://app.tornadored.com")
+      return;
+
+    window.location = "https://app.tornadored.com/cookies/setandredirect?smscode=" + event.data;
+  }, false);
+</script>
 </html>
