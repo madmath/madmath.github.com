@@ -20,12 +20,12 @@
 
     <div class="starter-template">
       <h2>Auto-redirect flow</h2>
-      <p>This page auto-redirects to app.tornadored.com immediately...</p>
+      <p>This page auto-redirects to app.tornadored.com in 5 seconds...</p>
 </body>
 <script type="text/javascript">
         window.addEventListener('DOMContentLoaded', (event) => {
-          window.location= "https://app.tornadored.com";
-        });
+            setTimeout(function(){ window.location= "https://app.tornadored.com"; }, 5000);
+          });
       </script>
 </script>
 </html>
