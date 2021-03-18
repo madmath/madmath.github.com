@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="referrer" content="never">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+
+  <title>Button redirect</title>
+  <style>
+  body {
+    padding-top: 5rem;
+  }
+  .starter-template {
+    padding: 3rem 1.5rem;
+  }</style>
+</head>
+<body>
+  <main role="main" class="container">
+
+    <div class="starter-template">
+      <h2>Button redirect flow</h2>
+      <p>This page has an event handler on the button, makes a fetch and redirects once the fetch resolves.</p>
+      <a class="btn btn-primary btn-lg" href="#" onclick="onButtonClick()" role="button" id="fetch">Fetch and Redirect »</a>
+</body>
+<script type="text/javascript">
+    function onButtonClick() {
+        fetch('https://app.tornadored.com/getredirecturl')
+            .then(response => response.json())
+            .then(data => {
+                window.location = data['url'];
+            });
+    }
+  </script>
+</script>
+</html>
