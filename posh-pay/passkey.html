@@ -18,12 +18,24 @@
 <body>
   <main role="main" class="container">
 
-
-    <h2>Passkey test: an iframe of webauthn.tornadored.com (register first <a href="https://webauthn.tornadored.com">here</a>)</h2>
-    <iframe width="400px" height="800px" src="https://webauthn.tornadored.com" allow="publickey-credentials-get" /></iframe>
+    <h2>Passkey iframe test</h2>
     
+    <h3>Step 1: Get an account on <code>webauthn.tornadored.com</code></h3>
+    <ol>
+      <li>Go to <a href="https://webauthn.tornadored.com" target="_blank">webauthn.tornadored.com</a>, pick a username and click register.</li>
+      <li>On iOS 16, you will be asked to save a passkey.</li>
+      <li>See that it works, and tap logout.</li>
+    </ol>
+    <br/>
+    <h3>Step 2: Log in to your account via a cross-origin iframe</h3>
+    <ol>
+      <li>You are now on a different domain (this one), which embeds <code>webauthn.tornadored.com</code> in an iframe, which sets <code>allow="publickey-credentials-get"</code></li>
+      <li>Enter the same username you chose earlier, and tap "login"</li>
+      <li>You should be able to use your passkey cross-origin!</li>
+      <iframe width="100%" height="400px" src="https://webauthn.tornadored.com" allow="publickey-credentials-get" /></iframe>
+    </ol>
+     
     
   </main><!-- /.container -->
-
 </body>
 </html>
